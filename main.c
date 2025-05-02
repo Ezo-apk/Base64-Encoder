@@ -6,7 +6,6 @@ int main() {
 
     char *ret;
     char input[MAX_INPUT_LENGTH];
-    char choice_input[100];
     short det;
 
     
@@ -17,14 +16,10 @@ int main() {
     
 
     printf("Do you want to encode or decode a string?\nType 1 for encoding and 2 for decoding.\n");
-    if (!fgets(choice_input, 100, stdin)) {
+    if (!scanf("%hi", &det)) {
         printf("Failed to get your choice, exitting\n");
         return 1;
     }
-
-    errno = 0;
-    det = (short)strtol(choice_input, NULL, 0);
-
 
     switch (det) {
         case 1:
@@ -38,7 +33,7 @@ int main() {
             return 0;
     }
 
-    if (!fgets(input, MAX_INPUT_LENGTH, stdin)) {
+    if (!scanf("%64000s", input)) {
         printf("Failed to read your input string, exitting\n");
         return 1;
     }

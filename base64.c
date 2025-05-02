@@ -14,12 +14,11 @@ uint32_t getBaseIndex(char c) {
 char* encodeBase64(char* plain_string) {
     uint32_t len = strlen(plain_string);
     uint32_t index = 0;
-    char* output = (char*)calloc(200, sizeof(char));
+    char* output = (char*)calloc(400, sizeof(char));
 
     for (uint32_t i = 0; i < len; i += 3) {
         uint32_t thruple = 0, nrBytes = 0;
         thruple += (uint32_t)(plain_string[i]) << 16;
-        nrBytes++;
         if (i + 1 < len) {
             thruple += (uint32_t)(plain_string[i + 1]) << 8;
             nrBytes++;
@@ -28,15 +27,13 @@ char* encodeBase64(char* plain_string) {
                 nrBytes++;
             }
         }
-        nrBytes++;
-        
-        for (uint32_t j = 0; j < nrBytes; ++j) {
+        for (uint32_t j = 0; j < (nrBytes + 2); ++j) {
             uint32_t decVal = (thruple >> ((3 - j) * 6)) & 63; // 0x3F
             output[index++] = BASE64SYMBOLS[decVal];
         }
     }
 
-    for (uint32_t i = 0; i < (3 - len % 3); ++i) {
+    for (uint32_t i = 0; i < ((3 - (len % 3)) % 3); ++i) {
         output[index++] = '=';
     }
 
@@ -46,7 +43,7 @@ char* encodeBase64(char* plain_string) {
 char* decodeBase64(char* encoded_string) {
     uint32_t len = strlen(encoded_string);
     uint32_t index = 0, nr_eqs = 0;
-    char* output = (char*)calloc(200, sizeof(char));
+    char* output = (char*)calloc(300, sizeof(char));
 
     for (uint32_t i = len - 1; i >= 0; --i) {
         if (encoded_string[i] == '=') {
